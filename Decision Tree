@@ -1,1 +1,32 @@
+import pandas as pd
+import requests
+import io
 
+url = "https://raw.githubusercontent.com/codebasics/py/master/ML/9_decision_tree/Exercise/titanic.csv"
+download = requests.get(url).content
+
+df = pd.read_csv(io.StringIO(download.decode('utf-8')))
+
+# Printing out the first 5 rows of the dataframe
+
+df.head()
+
+inputs = df.drop(['Survived','PassengerId','Name','SibSp','Parch','Ticket','Cabin','Embarked'],axis='columns')
+target = df['Survived']
+inputs.head()
+
+from sklearn.preprocessing import LabelEncoder
+le_sex = LabelEncoder()
+
+inputs['Sex'] = le_sex.fit_transform(inputs['Sex'])
+
+inputs.head()
+
+inputs.Age = inputs.Age.fillna(inputs.Age.mean())
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(inputs,target,test_size=0.2)
+from sklearn import tree
+model = tree.DecisionTreeClassifier()
+
+model.fit(X_train,y_train)
+model.score(X_test, y_test)
