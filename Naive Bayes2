@@ -1,0 +1,58 @@
+import numpy as np
+import pandas as pd
+
+import os
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+        
+import pandas as pd
+import numpy as np
+import random as rnd
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC, LinearSVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import Perceptron
+from sklearn.linear_model import SGDClassifier
+from sklearn.tree import DecisionTreeClassifier
+
+df = pd.read_csv('../input/1920v2/1920Term (2).csv')
+df.head()
+
+df=df.drop(df.index[5634:])
+df[df['Gender'].isnull()].index.tolist()
+df.info()
+df = df[["Smoker","Source",'Age','Product','RealTerm']]
+df.head()
+
+df = pd.concat([df, pd.get_dummies(df['Product'])], axis=1)
+df['TermStatus'] = np.where(df['RealTerm']=='Terminated', 1, 0)
+df['SourceCode'] = np.where(df['Source']=='eApp', 1, 0)
+df['SmokerCode'] = np.where(df['Smoker']=='N', 1, 0)
+df['Under30'] = np.where(df['Age']<=30, 1, 0)
+df.head()
+
+Y = df[["TermStatus"]]
+
+X = df[['SourceCode','Under30']]
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,Y,train_size=0.8)
+
+from sklearn.naive_bayes import BernoulliNB
+model = BernoulliNB()
+
+model.fit(X_train, y_train.values.ravel())
+model.score(X_test,y_test)
+X_test[0:10]
+y_test[0:10]
+model.predict(X_test[0:10])
+model.predict_proba(X_test[:10])from sklearn.metrics import confusion_matrix
+confusion_matrix(y_test, y_predicted)
