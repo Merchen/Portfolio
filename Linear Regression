@@ -1,0 +1,34 @@
+# Test
+
+import pandas as pd
+import numpy as np
+from sklearn import linear_model
+
+df = pd.read_csv('data download.txt')
+df
+
+df1 = df.rename(columns = {"test_score(out of 10)" : "test_score","interview_score(out of 10)" : "interview_score"})
+df1
+
+df1.test_score.median()
+df1.test_score = df1.test_score.fillna(df1.test_score.median())
+df1
+
+pip install word2number
+
+from word2number import w2n
+
+df1.experience = df1.experience.fillna("zero")
+df1
+df1.experience = df1.experience.apply(w2n.word_to_num)
+
+reg = linear_model.LinearRegression()
+reg.fit(df1.drop('salary($)',axis='columns'),df1.salary($))
+
+df1 = df1.rename(columns = {"salary($)" : "salary"})
+
+reg = linear_model.LinearRegression()
+reg.fit(df1.drop('salary',axis='columns'),df1.salary)
+
+reg.coef_
+reg.intercept_
