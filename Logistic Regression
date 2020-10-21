@@ -1,0 +1,43 @@
+import pandas as pd
+import requests
+import io
+
+url = "https://raw.githubusercontent.com/codebasics/py/master/ML/7_logistic_reg/Exercise/HR_comma_sep.csv"
+download = requests.get(url).content
+
+df = pd.read_csv(io.StringIO(download.decode('utf-8')))
+
+print (df.head())
+
+from matplotlib import pyplot as plt
+%matplotlib inline
+
+plt.scatter(df.salary,df.left,marker='+',color='red')
+
+pd.crosstab(df.Department,df.left).plot(kind='bar')
+
+subdf = df[['satisfaction_level','average_montly_hours','promotion_last_5years','salary']]
+subdf.head()
+
+salary_dummies = pd.get_dummies(subdf.salary, prefix="salary")
+df_with_dummies = pd.concat([subdf,salary_dummies],axis='columns')
+df_with_dummies.drop('salary',axis='columns',inplace=True)
+df_with_dummies.head()
+
+X = df_with_dummies
+X.head()
+
+y = df.left
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.3)
+from sklearn.linear_model import LogisticRegression
+model = LogisticRegression()
+
+model.fit(X_train, y_train)
+y_predicted = model.predict(X_test)
+
+model.predict_proba(X_test)
+
+model.score(X_test,y_test)
+
+y_predicted
