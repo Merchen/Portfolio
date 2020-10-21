@@ -1,0 +1,57 @@
+
+import numpy as np
+import pandas as pd
+
+import os
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+
+import random as rnd
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC, LinearSVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import Perceptron
+from sklearn.linear_model import SGDClassifier
+from sklearn.tree import DecisionTreeClassifier
+
+df = pd.read_csv('../input/uploadwalmart/Copy-of-dataset_CostPrediction.csv')
+df.head()
+df.describe()
+
+print(df.isnull().sum())
+print("-"*10)
+
+df['exWeatherTag'].fillna('NotEx', inplace = True)
+
+df['type'].fillna('NotExpedited', inplace = True)
+
+df['packageType'].fillna('NotTT', inplace = True)
+
+df=pd.get_dummies(df, columns=['dayPart','exWeatherTag','type','packageType','carrier'])
+
+type1 = df.dtypes
+type1
+
+df.describe(include = 'all')
+
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+
+sns.set_style("whitegrid")
+plt.style.use("fivethirtyeight")
+
+sns.distplot(df['cost'])
+
+plt.subplots(figsize=(20,15))
+sns.heatmap(df.corr(), annot=True)
